@@ -27,9 +27,11 @@ function App() {
 
         const DATA_OBJ = {
           timeSlots: {},
-          classes: {},
-          labels: [],
-          sections: []
+          allClasses: {},
+          classes: [],
+          sections: [], 
+          labTimeSlots: {}, 
+          labs: []
         };
 
         // Get course labels/departments
@@ -58,7 +60,6 @@ function App() {
         });
 
         // Get time slots for each day
-        const timeSlots = {};
         const sheetNames = [
           "Monday",
           "Tuesday",
@@ -66,6 +67,7 @@ function App() {
           "Thursday",
           "Friday",
         ];
+        const timeSlots = {};
         sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
           timeSlots[sheetNames[index]] = sheet?.data[0]?.rowData[4]?.values
             ?.slice(1)
@@ -75,16 +77,36 @@ function App() {
             }))
             ?.filter((cell) => cell?.formattedValue);
         });
+        
         DATA_OBJ["timeSlots"] = timeSlots;
-        DATA_OBJ["labels"] = labels;
+
+        const labTimeSlots = {};
+          sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
+          const rowData = sheet?.data[0]?.rowData;
+          const labRowIdx = rowData?.findIndex(i => i.values[0]?.formattedValue?.toLowerCase() === "lab");
+          labTimeSlots[sheetNames[index]] = sheet?.data[0]?.rowData[labRowIdx]?.values
+            ?.slice(1)
+            ?.map((cell, index) => ({
+              formattedValue: cell?.formattedValue,
+              startIndex: index + 1,
+            }))
+            ?.filter((cell) => cell?.formattedValue);
+        });
+
+        DATA_OBJ["labTimeSlots"] = labTimeSlots;
+        DATA_OBJ["classes"] = labels;
+        DATA_OBJ["labs"] = labels;
 
         // Get classes for each time slot
         const allClasses = {};
+        const allLabs = {};
         sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
           const day = sheetNames[index];
 
           const classesList = [];
-          sheet?.data[0]?.rowData?.slice(5)?.forEach((row) => {
+          const rowData = sheet?.data[0]?.rowData;
+          const labRowIdx = rowData?.findIndex(i => i.values[0]?.formattedValue?.toLowerCase() === "lab");
+          rowData?.slice(5, labRowIdx)?.forEach((row) => {
             DATA_OBJ.timeSlots[day]?.forEach((slot) => {
               const venue = row?.values[0]?.formattedValue;
               const cell = row?.values[slot?.startIndex];
@@ -94,18 +116,45 @@ function App() {
               const classObj = {
                 slot: slot?.formattedValue,
                 formattedValue: cell?.formattedValue,
-                label: DATA_OBJ.labels?.find((label) => label?.bgID === colorID)
+                label: DATA_OBJ.classes?.find((label) => label?.bgID === colorID)
                   ?.label,
                 venue,
+                isLab: cell?.formattedValue?.toLowerCase()?.includes("lab"),
                 section: cell?.formattedValue?.slice(cell?.formattedValue?.indexOf("(") + 1, cell?.formattedValue?.indexOf(")"))?.trim()
               };
               classesList.push(classObj);
             });
           });
+
+          const labsList = []; 
+
+           rowData?.slice(labRowIdx+1)?.forEach((row) => {
+            DATA_OBJ.labTimeSlots[day]?.forEach((slot) => {
+              const venue = row?.values[0]?.formattedValue;
+              const cell = row?.values[slot?.startIndex];
+              const colorID = createColorId(
+                cell?.effectiveFormat?.backgroundColor
+              );
+              const classObj = {
+                slot: slot?.formattedValue,
+                formattedValue: cell?.formattedValue,
+                label: DATA_OBJ.classes?.find((label) => label?.bgID === colorID)
+                  ?.label,
+                venue,
+                isLab: cell?.formattedValue?.toLowerCase()?.includes("lab"),
+                section: cell?.formattedValue?.slice(cell?.formattedValue?.indexOf("(") + 1, cell?.formattedValue?.indexOf(")"))?.trim()
+              };
+
+              labsList.push(classObj);
+            });
+          });
+
           allClasses[day] = classesList;
+          allLabs[day] = labsList;
         });
 
-        DATA_OBJ["classes"] = allClasses;
+        DATA_OBJ["allClasses"] = allClasses;
+        DATA_OBJ["allLabs"] = allLabs;
 
         // Get sections
         const allSections = [];
@@ -129,12 +178,23 @@ function App() {
         DATA_OBJ["sections"] = Array.from(uniqueSections);
 
 
-        DATA_OBJ?.labels?.forEach((label) => {
-          DATA_OBJ?.sections?.filter(s => s?.label === label?.label)?.forEach((section) => {
-              label["classes"][section?.section] = {};
+        DATA_OBJ?.classes?.forEach((cl) => {
+          DATA_OBJ?.sections?.filter(s => s?.label === cl?.label)?.forEach((section) => {
+              cl["classes"][section?.section] = {};
               sheetNames?.forEach((day) => {
-              label["classes"][section?.section][day] = allClasses[day]?.filter(
-                (cl) => cl?.label === label?.label && cl?.section === section?.section
+              cl["classes"][section?.section][day] = allClasses[day]?.filter(
+                (cl) => cl?.label === cl?.label && cl?.section === section?.section
+              )?.map((cl) => cl);
+            })
+          });
+        });
+
+        DATA_OBJ?.labs?.forEach((lab) => {
+          DATA_OBJ?.sections?.filter(s => s?.label === lab?.label)?.forEach((section) => {
+              lab["classes"][section?.section] = {};
+              sheetNames?.forEach((day) => {
+              lab["classes"][section?.section][day] = allLabs[day]?.filter(
+                (cl) => cl?.label === cl?.label && cl?.section === section?.section
               )?.map((cl) => cl);
             })
           });
