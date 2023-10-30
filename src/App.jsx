@@ -14,6 +14,16 @@ function App() {
       }
     };
 
+    const isMisc = (value) => {
+      switch (value) {
+        case "FSM":
+        case "FYP/ Thesis Evaluations": 
+          return true;
+      }
+
+      return false;
+    };
+
     (async () => {
       try {
         const GOOGLE_SHEETS_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
@@ -29,9 +39,10 @@ function App() {
           timeSlots: {},
           allClasses: {},
           classes: [],
-          sections: [], 
-          labTimeSlots: {}, 
-          labs: []
+          sections: [],
+          labTimeSlots: {},
+          labs: [],
+          miscs: {}
         };
 
         // Get course labels/departments
@@ -77,14 +88,18 @@ function App() {
             }))
             ?.filter((cell) => cell?.formattedValue);
         });
-        
+
         DATA_OBJ["timeSlots"] = timeSlots;
 
         const labTimeSlots = {};
-          sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
+        sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
           const rowData = sheet?.data[0]?.rowData;
-          const labRowIdx = rowData?.findIndex(i => i.values[0]?.formattedValue?.toLowerCase() === "lab");
-          labTimeSlots[sheetNames[index]] = sheet?.data[0]?.rowData[labRowIdx]?.values
+          const labRowIdx = rowData?.findIndex(
+            (i) => i.values[0]?.formattedValue?.toLowerCase() === "lab"
+          );
+          labTimeSlots[sheetNames[index]] = sheet?.data[0]?.rowData[
+            labRowIdx
+          ]?.values
             ?.slice(1)
             ?.map((cell, index) => ({
               formattedValue: cell?.formattedValue,
@@ -103,9 +118,15 @@ function App() {
         sheetsData?.sheets?.slice(1)?.forEach((sheet, index) => {
           const day = sheetNames[index];
 
+          DATA_OBJ.miscs[day] = [];
+
           const classesList = [];
           const rowData = sheet?.data[0]?.rowData;
-          const labRowIdx = rowData?.findIndex(i => i.values[0]?.formattedValue?.toLowerCase() === "lab");
+          const labRowIdx = rowData?.findIndex(
+            (i) => i.values[0]?.formattedValue?.toLowerCase() === "lab"
+          );
+
+
           rowData?.slice(5, labRowIdx)?.forEach((row) => {
             DATA_OBJ.timeSlots[day]?.forEach((slot) => {
               const venue = row?.values[0]?.formattedValue;
@@ -116,19 +137,29 @@ function App() {
               const classObj = {
                 slot: slot?.formattedValue,
                 formattedValue: cell?.formattedValue,
-                label: DATA_OBJ.classes?.find((label) => label?.bgID === colorID)
-                  ?.label,
+                label: DATA_OBJ.classes?.find(
+                  (label) => label?.bgID === colorID
+                )?.label,
                 venue,
+                isMisc: isMisc(cell?.formattedValue),
                 isLab: cell?.formattedValue?.toLowerCase()?.includes("lab"),
-                section: cell?.formattedValue?.slice(cell?.formattedValue?.indexOf("(") + 1, cell?.formattedValue?.indexOf(")"))?.trim()
+                section: cell?.formattedValue
+                  ?.slice(
+                    cell?.formattedValue?.indexOf("(") + 1,
+                    cell?.formattedValue?.indexOf(")")
+                  )
+                  ?.trim(),
               };
+              if(classObj.isMisc) {
+                DATA_OBJ.miscs[day].push(classObj);
+              }
               classesList.push(classObj);
             });
           });
 
-          const labsList = []; 
+          const labsList = [];
 
-           rowData?.slice(labRowIdx+1)?.forEach((row) => {
+          rowData?.slice(labRowIdx + 1)?.forEach((row) => {
             DATA_OBJ.labTimeSlots[day]?.forEach((slot) => {
               const venue = row?.values[0]?.formattedValue;
               const cell = row?.values[slot?.startIndex];
@@ -138,12 +169,23 @@ function App() {
               const classObj = {
                 slot: slot?.formattedValue,
                 formattedValue: cell?.formattedValue,
-                label: DATA_OBJ.classes?.find((label) => label?.bgID === colorID)
-                  ?.label,
+                label: DATA_OBJ.classes?.find(
+                  (label) => label?.bgID === colorID
+                )?.label,
+                isMisc: isMisc(cell?.formattedValue),
                 venue,
                 isLab: cell?.formattedValue?.toLowerCase()?.includes("lab"),
-                section: cell?.formattedValue?.slice(cell?.formattedValue?.indexOf("(") + 1, cell?.formattedValue?.indexOf(")"))?.trim()
+                section: cell?.formattedValue
+                  ?.slice(
+                    cell?.formattedValue?.indexOf("(") + 1,
+                    cell?.formattedValue?.indexOf(")")
+                  )
+                  ?.trim(),
               };
+
+              if(classObj.isMisc) {
+                DATA_OBJ.miscs[day].push(classObj);
+              }
 
               labsList.push(classObj);
             });
@@ -161,43 +203,56 @@ function App() {
 
         sheetNames?.forEach((day) => {
           const sectionNames = allClasses[day]?.map((cl) => {
-            const str = cl?.formattedValue; 
-            if(str) {
-              const section = str?.slice(str?.indexOf("(") + 1, str?.indexOf(")"))?.trim();
-              return {section, label: cl?.label};
+            const str = cl?.formattedValue;
+            if (str) {
+              const section = str
+                ?.slice(str?.indexOf("(") + 1, str?.indexOf(")"))
+                ?.trim();
+              return { section, label: cl?.label };
             } else {
               return null;
             }
-          })
+          });
           allSections.push(...sectionNames);
-        })
+        });
 
         const validSections = allSections?.filter((section) => section);
         const uniqueSections = new Set(validSections);
-        
+
         DATA_OBJ["sections"] = Array.from(uniqueSections);
 
-
         DATA_OBJ?.classes?.forEach((cl) => {
-          DATA_OBJ?.sections?.filter(s => s?.label === cl?.label)?.forEach((section) => {
+          DATA_OBJ?.sections
+            ?.filter((s) => s?.label === cl?.label)
+            ?.forEach((section) => {
               cl["classes"][section?.section] = {};
               sheetNames?.forEach((day) => {
-              cl["classes"][section?.section][day] = allClasses[day]?.filter(
-                (cl) => cl?.label === cl?.label && cl?.section === section?.section
-              )?.map((cl) => cl);
-            })
-          });
+                cl["classes"][section?.section][day] = allClasses[day]
+                  ?.filter(
+                    (cl) =>
+                      cl?.label === cl?.label &&
+                      cl?.section === section?.section
+                  )
+                  ?.map((cl) => cl);
+              });
+            });
         });
 
         DATA_OBJ?.labs?.forEach((lab) => {
-          DATA_OBJ?.sections?.filter(s => s?.label === lab?.label)?.forEach((section) => {
+          DATA_OBJ?.sections
+            ?.filter((s) => s?.label === lab?.label)
+            ?.forEach((section) => {
               lab["classes"][section?.section] = {};
               sheetNames?.forEach((day) => {
-              lab["classes"][section?.section][day] = allLabs[day]?.filter(
-                (cl) => cl?.label === cl?.label && cl?.section === section?.section
-              )?.map((cl) => cl);
-            })
-          });
+                lab["classes"][section?.section][day] = allLabs[day]
+                  ?.filter(
+                    (cl) =>
+                      cl?.label === cl?.label &&
+                      cl?.section === section?.section
+                  )
+                  ?.map((cl) => cl);
+              });
+            });
         });
 
         console.log(DATA_OBJ);
