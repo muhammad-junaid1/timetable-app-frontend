@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import Navbar from "./components/utils/navbar";
 import Sidebar from "./components/utils/sidebar";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./pages/dashboard";
 
 const createColorId = (colorObj) => {
   if (colorObj) {
@@ -274,6 +276,14 @@ function App() {
         <Sidebar />
         <main className="flex-1">
           <Navbar />
+          <div className="p-5">
+
+          <Routes>
+            <Route path="/" element={<h1>Login</h1>}/>
+            <Route path="/dashboard" element={<Dashboard/>}/>
+            <Route path="*" element={<h1>Not Found</h1>}/>
+          </Routes>
+          </div>
         </main>
       </div>
     </>

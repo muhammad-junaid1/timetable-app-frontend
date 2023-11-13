@@ -6,13 +6,54 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --primary-color: #19a8f0;
+}
+ 
+html, body {
+  scroll-behavior: smooth; 
+  font-size: 16px;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: rgba(0, 0, 0, 0.8);
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.class-prev, .class-next {
+  width: 30%; 
+}
+
+.class-prev {
+  background: #eee;
+}
+
+.class-next {
+  background: #cccccc;
+}
+
+.class-next h1, .class-prev h1{
+  font-size: 24px;
+}
+
+.class-current {
+  background: var(--primary-color);
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  width: 60%; 
   color: white;
+}
+
+.class-current h1 {
+  font-size: 42px;
+  font-weight: bold;
 }
