@@ -3,6 +3,18 @@ import Navbar from "./components/utils/navbar";
 import Sidebar from "./components/utils/sidebar";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
+import Settings from "./pages/settings";
+
+const routes = [
+  {
+    link: "/dashboard", 
+    element: <Dashboard/>
+  }, 
+  {
+    link: "/settings", 
+    element: <Settings/>
+  }
+];
 
 const createColorId = (colorObj) => {
   if (colorObj) {
@@ -280,7 +292,9 @@ function App() {
 
           <Routes>
             <Route path="/" element={<h1>Login</h1>}/>
-            <Route path="/dashboard" element={<Dashboard/>}/>
+            {routes?.map((route) => {
+              return <Route key={route?.link} path={route?.link} element={route?.element}/>
+            })}
             <Route path="*" element={<h1>Not Found</h1>}/>
           </Routes>
           </div>

@@ -1,7 +1,7 @@
 import ClassCard from "./ClassCard";
 
 const Dashboard = () => {
-    return <div className="flex items-center relative justify-between mt-4">
+    return <div className="flex items-center relative justify-between mt-5">
         <ClassCard type="prev" data={{
             title: "Applied Physics", 
             slot: "08:30-09:50"
