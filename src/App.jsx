@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useState, useEffect} from "react";
 import Navbar from "./components/navbar";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";

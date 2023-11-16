@@ -6,10 +6,11 @@ const Navbar = () => {
   const greeting = useSelector(store => store.greeting);
   return (
     <div className="border-b shadow-sm flex justify-between border-b-gray-200 p-2.5">
-      <a href="/">
-        <img src={Logo} alt="Logo" width={110} />
-      </a>
-      <div className="flex items-center">
+      
+        <a href="/">
+          <img src={Logo} alt="Logo" width={110} />
+        </a>
+    <div className="flex items-center">
         {/* <MdAccountCircle className="text-primary" size={22} /> */}
         <strong className="mr-2 text-sm">{greeting}, <span className="text-primary">Muhammad Junaid</span></strong>
       </div>
