@@ -1,6 +1,6 @@
 import { Step, StepLabel, Stepper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FaCheck, FaCheckCircle} from "react-icons/fa";
+import { FaCheckCircle} from "react-icons/fa";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
@@ -12,7 +12,7 @@ const steps = [
   "IICT Lab",
 ];
 
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
+const QontoConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
     left: "calc(-50% + 16px)",
@@ -29,15 +29,14 @@ const QontoConnector = styled(StepConnector)(({ theme }) => ({
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
-    borderColor:
-      theme.palette.mode === "dark" ? theme.palette.grey[800] : "#eaeaf0",
+    borderColor: "#c0c0c0ba",
     borderTopWidth: 3,
     borderRadius: 1,
   },
 }));
 
-const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
-  color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
+const QontoStepIconRoot = styled("div")(({ ownerState }) => ({
+  color: "#c0c0c0ba",
   display: "flex",
   height: 22,
   alignItems: "center",

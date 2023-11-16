@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const greeting = useSelector(store => store.greeting);
   return (
-    <div className="border-b shadow-sm flex justify-between border-b-gray-200 p-2.5">
+    <div className="shadow-lg flex justify-between border-b-gray-200 border-b-2 p-2.5">
       
         <a href="/">
           <img src={Logo} alt="Logo" width={110} />

@@ -17,6 +17,7 @@ html, body {
   font-size: 16px;
 }
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,4 +57,13 @@ html, body {
   font-size: 42px;
   font-weight: bold;
   letter-spacing: 1px;
+}
+
+.app-container {
+  background-image: url("https://shots.codepen.io/username/pen/pbzooY-800.jpg?version=1464121560");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-color: #ffffff96;
+  background-blend-mode: overlay;
 }

@@ -331,7 +331,7 @@ function App() {
         <Sidebar bgImg={sidebarBgImg} />
         <main className="flex-1">
           <Navbar />
-          <div className="p-5">
+          <div className="p-5 app-container min-h-screen">
             <Routes>
               {routes?.map((route) => {
                 return (
