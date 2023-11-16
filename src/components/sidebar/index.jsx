@@ -13,7 +13,7 @@ const Sidebar = ({ bgImg }) => {
         backgroundBlendMode: "overlay",
         borderImage: "linear-gradient(to bottom, #0a58ff, rgb(222, 222, 222), #0a58ff) 1 100%"
       }}
-      className="sticky border border-l-0 border-t-0 border-b-0 border-solid border-r-[4px] shadow-sm flex flex-col px-5 items-center top-0 bottom-0 left-0 h-screen w-[330px]"
+      className="sticky border border-l-0 border-t-0 border-b-0 border-solid border-r-[4px] shadow-sm flex flex-col px-5 items-center top-0 bottom-0 left-0 h-screen w-[410px]"
     >
       <Weather />
       <Info />

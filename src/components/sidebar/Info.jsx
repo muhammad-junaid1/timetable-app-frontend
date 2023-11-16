@@ -60,7 +60,7 @@ const Info = () => {
     };
   }, []);
   return (
-      <div className="mt-[75%]">
+      <div className="mt-[65%]">
         <div className="text-center text-white">
         <h1 className="font-light text-7xl mb-1.5">{currDateTime?.time}</h1>
         <p>{currDateTime?.date}</p>
