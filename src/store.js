@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./components/utils/userslice";
+import greetingReducer from "./slices/greeting";
+import weatherReducer from "./slices/weather";
 
 export default configureStore({
     reducer: {
-        user: userReducer, 
+        greeting: greetingReducer, 
+        weather: weatherReducer
     }
 })

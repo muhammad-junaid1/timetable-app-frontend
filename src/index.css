@@ -33,20 +33,13 @@ html, body {
   background-color: var(--primary-color);
 }
 
-.class-prev, .class-next {
-  width: 30%; 
+.class-next, .class-prev {
+  width: 35%; 
   filter: blur(0.7px);
   opacity: 0.4;
   font-family: "Manrope", Inter;
 }
 
-.class-prev {
-  background: #eee;
-}
-
-.class-next {
-  background: #cccccc;
-}
 
 .class-next h1, .class-prev h1{
   font-size: 24px;
@@ -56,13 +49,13 @@ html, body {
   font-size: 14px;
 }
 
-.class-current {
+.class-current{
   background: var(--primary-color);
   position: absolute; 
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%);
-  width: 60%; 
+  width: 55%; 
   color: white;
   z-index: 50;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

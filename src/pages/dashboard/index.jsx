@@ -1,20 +1,11 @@
-import ClassCard from "./ClassCard";
+import RealTimeSchedule from "./RealTimeSchedule";
 
 const Dashboard = () => {
-    return <div className="flex items-center relative justify-between mt-5">
-        <ClassCard type="prev" data={{
-            title: "Applied Physics", 
-            slot: "08:30-09:50"
-        }}/>
-        <ClassCard type="current" data={{
-            title: "Data Structures", 
-            slot: "08:30-09:50"
-        }}/>
-        <ClassCard type="next" data={{
-            title: "Pak Studies", 
-            slot: "08:30-09:50"
-        }}/>
-    </div>
-}
+  return (
+    <>
+        <RealTimeSchedule/>
+    </>
+  );
+};
 
 export default Dashboard;

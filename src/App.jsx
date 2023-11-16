@@ -1,19 +1,16 @@
-import { useEffect } from "react";
-import Navbar from "./components/utils/navbar";
-import Sidebar from "./components/utils/sidebar";
+import { useEffect, useState } from "react";
+import Navbar from "./components/navbar";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
-import Settings from "./pages/settings";
+import { useDispatch } from "react-redux";
+import Sidebar from "./components/sidebar";
+import { setWeather } from "./slices/weather";
 
 const routes = [
   {
-    link: "/dashboard", 
-    element: <Dashboard/>
-  }, 
-  {
-    link: "/settings", 
-    element: <Settings/>
-  }
+    link: "/",
+    element: <Dashboard />,
+  },
 ];
 
 const createColorId = (colorObj) => {
@@ -278,25 +275,75 @@ const getSheetData = () => {
 };
 
 function App() {
+  const [sidebarBgImg, setSidebarBgImg] = useState("");
+  const dispatch = useDispatch();
+
+  const getSidebarBgImage = async () => {
+    const OPENWEATHER_API_KEY = import.meta.env.VITE_OPEN_WEATHER;
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      fetch(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          const weather = result?.current?.weather[0];
+          const weather_description = weather?.description || "weather";
+          const weatherIcon = weather?.icon;
+          const temp = result?.current?.temp;
+          const desc = weather?.main;
+          dispatch(
+            setWeather({
+              weatherIcon,
+              temp, 
+              desc
+            })
+          );
+
+          const UNSPLASH_API_KEY = import.meta.env.VITE_UNSPLASH_KEY;
+          fetch(
+            `https://api.unsplash.com/search/photos?query=${weather_description}&client_id=${UNSPLASH_API_KEY}&per_page=30&orientation=landscape`
+          )
+            .then((response) => response.json())
+            .then((result) => {
+              const randomImg =
+                result?.results[
+                  Math.floor(Math.random() * result?.results?.length)
+                ]?.links?.download;
+              setSidebarBgImg(randomImg);
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((err) => console.log(err));
+    });
+  };
+
   useEffect(() => {
+    getSidebarBgImage();
     getSheetData();
   }, []);
 
   return (
     <>
-      <div className="wrapper flex">
-        <Sidebar />
+      <div className="flex">
+        <Sidebar bgImg={sidebarBgImg} />
         <main className="flex-1">
           <Navbar />
           <div className="p-5">
-
-          <Routes>
-            <Route path="/" element={<h1>Login</h1>}/>
-            {routes?.map((route) => {
-              return <Route key={route?.link} path={route?.link} element={route?.element}/>
-            })}
-            <Route path="*" element={<h1>Not Found</h1>}/>
-          </Routes>
+            <Routes>
+              {routes?.map((route) => {
+                return (
+                  <Route
+                    key={route?.link}
+                    path={route?.link}
+                    element={route?.element}
+                  />
+                );
+              })}
+              <Route path="*" element={<h1>Not Found</h1>} />
+            </Routes>
           </div>
         </main>
       </div>
