@@ -7,7 +7,7 @@ import StepConnector, {
 
 const steps = [
   "Pak Studies",
-  "Discrete Mathematics",
+  "Data Structures",
   "Applied Physics",
   "IICT Lab",
 ];
