@@ -75,9 +75,9 @@ const RealTimeSchedule = () => {
     <>
       <div className="mt-[70px]">
         <Stepper alternativeLabel activeStep={1} connector={<QontoConnector />}>
-          {steps.map((label) => ( 
+          {steps.map((label, index) => ( 
             <Step key={label}>
-              <StepLabel style={{cursor: "pointer"}} StepIconComponent={QontoStepIcon}><x-sign>{label}</x-sign></StepLabel>
+              <StepLabel style={{cursor: "pointer"}} StepIconComponent={QontoStepIcon}><span className={index === 1 && 'current-class'}>{label}</span></StepLabel>
             </Step>
           ))}
         </Stepper>

@@ -9,6 +9,7 @@ import {
   setContentVisiblity,
   setContainerVisibility,
 } from "./slices/sidebarVisibility";
+import { CircularProgress } from "@mui/material";
 
 const routes = [
   {
@@ -280,6 +281,7 @@ const getSheetData = () => {
 
 function App() {
   const [sidebarBgImg, setSidebarBgImg] = useState("");
+  const [appLoaded, setAppLoaded] = useState(false);
   const dispatch = useDispatch();
 
   const getSidebarBgImage = async () => {
@@ -308,7 +310,7 @@ function App() {
 
           const UNSPLASH_API_KEY = import.meta.env.VITE_UNSPLASH_KEY;
           fetch(
-            `https://api.unsplash.com/search/photos?query=${weather_description}&client_id=${UNSPLASH_API_KEY}&per_page=30&orientation=landscape`
+            `https://api.unsplash.com/search/photos?query=${weather_description}&auto=format&q=0&client_id=${UNSPLASH_API_KEY}&per_page=20&orientation=landscape&fit=cover`
           )
             .then((response) => response.json())
             .then((result) => {
@@ -320,10 +322,13 @@ function App() {
               image.src = randomImg;
               image.onload = () => {
                 setSidebarBgImg(randomImg);
-                dispatch(setContainerVisibility(true));
+                setAppLoaded(true);
                 setTimeout(() => {
-                  dispatch(setContentVisiblity(true));
-                }, 1000);
+                  dispatch(setContainerVisibility(true));
+                  setTimeout(() => {
+                    dispatch(setContentVisiblity(true));
+                  }, 1000);
+                }, 1500);
               };
             })
             .catch((error) => console.log(error));
@@ -337,9 +342,9 @@ function App() {
     getSheetData();
   }, []);
 
-  return (
-    <>
-      <div className="flex">
+  if (appLoaded) {
+    return (
+      <div className="flex app-fade">
         <Sidebar bgImg={sidebarBgImg} />
         <main className="flex-1">
           <Navbar />
@@ -359,8 +364,20 @@ function App() {
           </div>
         </main>
       </div>
-    </>
-  );
+    );
+  } else {
+    return (
+      <div className="min-h-screen app-container flex justify-center items-center">
+      
+        <div className="app-loading-container">
+          <span className="circle"></span>
+          <span className="circle"></span>
+          <span className="circle"></span>
+          <span className="circle"></span>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

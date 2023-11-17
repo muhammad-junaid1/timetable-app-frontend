@@ -23,6 +23,11 @@
   opacity: 0;
 }
 
+.app-fade {
+  animation: fade 0.5s ease forwards;
+  opacity: 0;
+}
+
 @keyframes fade {
   to {
     opacity: 1;
@@ -56,7 +61,7 @@
   }
 }
 
-x-sign {
+.current-class {
   --interval: 1s;
   display: block;
   text-shadow: 0 0 10px var(--color1), 0 0 20px var(--color2),
@@ -73,4 +78,52 @@ x-sign {
   font-family: "Lato";
   letter-spacing: 2px;
   font-size: 18px;
+}
+
+.app-loading-container {
+  height: 15px;
+  width: 55px;
+  display: flex;
+  position: relative;
+}
+
+.app-loading-container .circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: black;
+  animation: move 500ms linear 0ms infinite;
+  margin-right: 12px;
+}
+.app-loading-container .circle:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: grow 500ms linear 0ms infinite;
+}
+.app-loading-container .circle:last-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 0;
+  animation: grow 500ms linear 0s infinite reverse;
+}
+
+@keyframes grow {
+  from {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes move {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(25px);
+  }
 }
