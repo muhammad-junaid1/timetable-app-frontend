@@ -32,7 +32,7 @@ const Sidebar = ({ bgImg }) => {
           borderImage:
             "linear-gradient(to bottom, #0a58ff, rgb(222, 222, 222), #0a58ff) 1 100%",
         }}
-        className="sticky slide-right border slide-right border-l-0 border-t-0 border-b-0 border-solid border-r-[4px] shadow-sm px-5 top-0 bottom-0 left-0 h-screen w-[360px]"
+        className="sticky slide-right border slide-right border-l-0 border-t-0 border-b-0 border-solid border-r-[4px] shadow-sm px-5 top-0 bottom-0 left-0 h-screen w-[340px]"
       >
         {showContent && (
           <div className="flex flex-col items-center">

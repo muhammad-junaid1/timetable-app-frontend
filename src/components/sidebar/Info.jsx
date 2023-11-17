@@ -14,21 +14,20 @@ function getGreeting(hour) {
   let greeting;
 
   if (hour >= 5 && hour < 12) {
-    greeting = 'Good morning';
+    greeting = "Good morning";
   } else if (hour >= 12 && hour < 17) {
-    greeting = 'Good afternoon';
+    greeting = "Good afternoon";
   } else if (hour >= 17 && hour < 21) {
-    greeting = 'Good evening';
+    greeting = "Good evening";
   } else {
-    greeting = 'Good night';
+    greeting = "Good night";
   }
 
-  return greeting;
+  return greeting + ",";
 }
 
-
 const Info = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [currDateTime, setCurrDateTime] = useState({
     time: "",
     date: "",
@@ -60,12 +59,12 @@ const Info = () => {
     };
   }, []);
   return (
-      <div className="mt-[65%] slide-down">
-        <div className="text-center text-white">
+    <div className="mt-[65%] slide-down">
+      <div className="text-center text-white">
         <h1 className="font-light text-7xl mb-1.5">{currDateTime?.time}</h1>
         <p>{currDateTime?.date}</p>
-            </div>
       </div>
+    </div>
   );
 };
 
