@@ -312,7 +312,11 @@ function App() {
                 result?.results[
                   Math.floor(Math.random() * result?.results?.length)
                 ]?.links?.download;
-              setSidebarBgImg(randomImg);
+                const image = new Image(); 
+                image.src = randomImg; 
+                image.onload = () => {
+                  setSidebarBgImg(randomImg);
+                }
             })
             .catch((error) => console.log(error));
         })
