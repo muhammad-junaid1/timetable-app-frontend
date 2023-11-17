@@ -4,7 +4,7 @@ const Weather = () => {
   const weather = useSelector((store) => store.weather);
   if (weather?.weatherIcon || weather?.desc || weather?.temp) {
     return (
-      <div className="flex items-center absolute top-0 left-0 text-white">
+      <div className="flex items-center absolute m-2 top-0 left-0 text-white">
         <img
           alt=""
           className=""
@@ -18,7 +18,7 @@ const Weather = () => {
         </p>
       </div>
     );
-  } else return <></>
+  } else return <></>;
 };
 
 export default Weather;
