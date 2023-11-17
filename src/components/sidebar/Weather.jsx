@@ -1,7 +1,7 @@
 
 const Weather = ({weatherData ={}}) => {
     return (
-      <div className="flex fade items-center absolute m-2 top-0 left-0 text-white">
+      <div className="flex fade justify-center items-center m-2 text-white">
         <img
           alt=""
           className=""

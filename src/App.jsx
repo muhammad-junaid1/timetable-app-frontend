@@ -1,10 +1,14 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/navbar";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import { useDispatch } from "react-redux";
 import Sidebar from "./components/sidebar";
 import { setWeather } from "./slices/weather";
+import {
+  setContentVisiblity,
+  setContainerVisibility,
+} from "./slices/sidebarVisibility";
 
 const routes = [
   {
@@ -297,8 +301,8 @@ function App() {
           dispatch(
             setWeather({
               weatherIcon,
-              temp, 
-              desc
+              temp,
+              desc,
             })
           );
 
@@ -312,11 +316,15 @@ function App() {
                 result?.results[
                   Math.floor(Math.random() * result?.results?.length)
                 ]?.links?.download;
-                const image = new Image(); 
-                image.src = randomImg; 
-                image.onload = () => {
-                  setSidebarBgImg(randomImg);
-                }
+              const image = new Image();
+              image.src = randomImg;
+              image.onload = () => {
+                setSidebarBgImg(randomImg);
+                dispatch(setContainerVisibility(true));
+                setTimeout(() => {
+                  dispatch(setContentVisiblity(true));
+                }, 1000);
+              };
             })
             .catch((error) => console.log(error));
         })

@@ -73,11 +73,11 @@ function QontoStepIcon(props) {
 const RealTimeSchedule = () => {
   return (
     <>
-      <div className="mt-16">
+      <div className="mt-[70px]">
         <Stepper alternativeLabel activeStep={1} connector={<QontoConnector />}>
-          {steps.map((label) => (
+          {steps.map((label) => ( 
             <Step key={label}>
-              <StepLabel style={{cursor: "pointer"}} StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+              <StepLabel style={{cursor: "pointer"}} StepIconComponent={QontoStepIcon}><x-sign>{label}</x-sign></StepLabel>
             </Step>
           ))}
         </Stepper>
