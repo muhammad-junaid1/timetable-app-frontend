@@ -62,13 +62,11 @@
 }
 
 .current-class {
-  --interval: 1s;
   display: block;
   text-shadow: 0 0 10px var(--color1), 0 0 20px var(--color2),
     0 0 40px var(--color3), 0 0 80px var(--color4);
   will-change: filter, color;
   filter: saturate(60%);
-  animation: flicker steps(100) var(--interval) 1s infinite;
   color: var(--primary-color);
   font-weight: 600;
   --color1: rgb(64 124 255 / 75%);
